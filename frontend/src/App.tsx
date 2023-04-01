@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 declare global {
@@ -15,7 +15,17 @@ function App() {
   const [provider, setProvider] = useState<ethers.BrowserProvider>();
   const [address, setAddress] = useState("");
 
-  
+  const [hasWallet, setHasWallet] = useState(false);
+
+  useEffect(() => {
+    // Check if the user has Metamask installed
+    if (
+      typeof window !== "undefined" &&
+      typeof window.ethereum !== "undefined"
+    ) {
+      setHasWallet(true);
+    }
+  }, []);
 
   const connectWallet = async () => {
     if (window.ethereum) {
@@ -42,13 +52,53 @@ function App() {
 
   return (
     <div className="container mx-auto px-4 pb-10">
-      <h1 className="text-3xl font-semibold my-8">Verify Your NFT Ownership</h1>
-      <h2 className="text-2xl mb-4">Snap Connect NFT Verification</h2>
-      <p className="mb-4">
-        To join the Snap Connect Telegram community, you need to sign a message
-        with your wallet, and then the Snap Connect Telegram bot will verify if
-        you have the necessary Snap Connect NFT.
-      </p>
+      <h1 className="text-3xl font-semibold my-8">Snap Connect Community</h1>
+      <h2 className="text-2xl mb-4">
+        Learn how to join the Snap Connect Community
+      </h2>
+
+      {!hasWallet && (
+        <>
+          <p className="underline mb-2">
+            We have detected that you do not have a wallet installed. Please
+            install Metamask to continue.
+          </p>
+          <ol>
+            <li>Open the Google Chrome browser on your computer.</li>
+            <li>
+              Go to the Chrome Web Store by typing "chrome://extensions" in the
+              address bar and hitting enter.
+            </li>
+            <li>In the Chrome Web Store search bar, type "Metamask".</li>
+            <li>
+              Click on the "Add to Chrome" button for the Metamask extension.
+            </li>
+            <li>
+              A pop-up window will appear, click on the "Add Extension" button
+              to confirm the installation.
+            </li>
+            <li>
+              Once the installation is complete, you should see the Metamask
+              icon in the top-right corner of your browser window.
+            </li>
+            <li>Click on the Metamask icon to open the extension.</li>
+            <li>Click on the "Get Started" button.</li>
+            <li>
+              You will be asked to agree to the terms of use. Read the terms and
+              if you agree, click on the "Accept" button.
+            </li>
+            <li>
+              You will then be asked to create a new wallet or import an
+              existing one. Choose the option that applies to you and follow the
+              instructions.
+            </li>
+            <li>
+              After setting up your wallet, you should be able to use Metamask
+              to interact with Ethereum-enabled websites and applications.
+            </li>
+          </ol>
+        </>
+      )}
 
       {!address && (
         <p className="mb-4 underline">
