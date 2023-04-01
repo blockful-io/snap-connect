@@ -1,0 +1,10 @@
+http://localhost:3000
+
+###
+POST http://localhost:3000/snap-create
+Content-Type: application/json
+
+{
+    "username": "Maicon_Moreira",
+    
+}

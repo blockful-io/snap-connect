@@ -14,7 +14,7 @@ bot.on("message", (msg) => {
   const chatId = msg.chat.id;
 
   // Echo the user's message
-  bot.sendMessage(chatId, "You said: " + msg.text);
+  bot.sendMessage(chatId, "to brincando");
 });
 
 export default bot;
