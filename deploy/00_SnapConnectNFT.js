@@ -1,10 +1,11 @@
-import { ethers } from "hardhat";
-import dotenv from "dotenv";
+const { ethers } = require("hardhat");
+const dotenv = require("dotenv");
 dotenv.config();
 
 module.exports = async ({ deployments }) => {
   const { deploy } = deployments;
   const signers = await ethers.getSigners();
+  console.log("signers[0].address: ", signers[0].address);
   const owner = signers[0].address;
   await deploy("SnapConnectNFT", {
     from: owner,
