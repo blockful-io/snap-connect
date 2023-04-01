@@ -11,11 +11,11 @@ function App() {
   const messageToSign =
     "I have the Snap Connect NFT and I am interested in joining the Snap Connect community!";
 
-  const [signature, setSignature] = useState("");
-  const [provider, setProvider] = useState<ethers.BrowserProvider>();
-  const [address, setAddress] = useState("");
-
   const [hasWallet, setHasWallet] = useState(false);
+  const [snapInstalled, setSnapInstalled] = useState(false);
+  const [addressConnected, setAddressConnected] = useState("");
+  const [provider, setProvider] = useState<ethers.BrowserProvider>();
+  const [signature, setSignature] = useState("");
 
   useEffect(() => {
     // Check if the user has Metamask installed
@@ -34,7 +34,7 @@ function App() {
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
       setProvider(provider);
-      setAddress(address);
+      setAddressConnected(address);
     } else {
       alert("Please install MetaMask or another Ethereum wallet.");
     }
@@ -59,6 +59,7 @@ function App() {
 
       {!hasWallet && (
         <>
+          <p className="text-sm text-gray-500 mb-4">step 1/33</p>
           <p className="underline mb-2">
             We have detected that you do not have a wallet installed. Please
             install Metamask to continue.
@@ -100,7 +101,60 @@ function App() {
         </>
       )}
 
-      {!address && (
+      {hasWallet && !snapInstalled && (
+        <>
+          <p className="text-sm text-gray-500 mb-4">step 2/33</p>
+          <p className="underline mb-2">
+            Please install the Snap Connect Metamask snap to continue.
+          </p>
+          <button
+            onClick={() => setSnapInstalled(true)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+          >
+            Install Snap
+          </button>
+        </>
+      )}
+
+      {hasWallet && snapInstalled && !addressConnected && (
+        <>
+          <p className="text-sm text-gray-500 mb-4">step 3/33</p>
+          <p className="underline mb-2">
+            Now you need to connect your Metamask wallet in order to sign the
+            transaction.
+          </p>
+          <button
+            onClick={connectWallet}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
+          >
+            Connect Wallet
+          </button>
+        </>
+      )}
+
+      {hasWallet && snapInstalled && addressConnected && !signature && (
+        <>
+          <p className="text-sm text-gray-500 mb-4">step 4/33</p>
+          <p className="underline mb-2">
+            Now you need to prove that you have a wallet that contains the Snap
+            Connect NFT.
+          </p>
+          <p className="mb-4">
+            Please sign the following message with your wallet:
+          </p>
+          <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto">
+            {messageToSign}
+          </pre>
+          <button
+            onClick={signMessage}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md mb-4 mt-4"
+          >
+            Sign Message
+          </button>
+        </>
+      )}
+
+      {/* {!address && (
         <p className="mb-4 underline">
           Please connect your wallet to sign the message.
         </p>
@@ -146,7 +200,7 @@ function App() {
             NFT ownership.
           </p>
         </>
-      )}
+      )} */}
     </div>
   );
 }
