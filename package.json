@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.ts",
-    "start": "pm2 start src/app.ts --interpreter ./node_modules/.bin/ts-node",
+    "dev": "nodemon src/index.ts",
+    "start": "pm2 start src/index.ts --interpreter ./node_modules/.bin/ts-node",
     "deploy-local": "npx hardhat deploy --network localhost",
     "deploy-goerli": "npx hardhat deploy --network goerli"
   },

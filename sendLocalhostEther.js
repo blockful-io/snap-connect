@@ -2,7 +2,7 @@ const ethers = require("ethers");
 require("dotenv").config();
 
 const FROM_PRIVATE_KEY =
-  "0xa6fcb74e91392c28404072d7dcde8215d8f632ebe613a9648d982c5f7c24e8f2";
+  "0x8dbc301724b8ea85d4c6574d6688c5565beafdfe420791228926a03941ff14aa";
 const to_private_key = process.env.LOCALHOST_PRIVATE_KEY;
 
 async function main() {
