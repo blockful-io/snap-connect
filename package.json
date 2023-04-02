@@ -10,7 +10,8 @@
     "deploy-local": "npx hardhat deploy --network localhost",
     "deploy-mumbai": "npx hardhat deploy --network mumbai",
     "deploy-celo": "npx hardhat deploy --network celo",
-    "deploy-aurora": "npx hardhat deploy --network aurora"
+    "deploy-aurora": "npx hardhat deploy --network aurora",
+    "build": "tsc --outDir build"
   },
   "repository": {
     "type": "git",
@@ -52,6 +53,7 @@
     "solidity-coverage": "^0.8.1",
     "telegraf": "^4.12.2",
     "ts-node": "^10.9.1",
+    "tsc": "^2.0.4",
     "typechain": "^8.1.0",
     "typescript": "^5.0.3"
   }
