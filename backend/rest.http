@@ -10,13 +10,33 @@ Content-Type: application/json
     "address": "0x5C2CF54690d809F8F03b5a96F8A2Adf50A51d7D8"
 }
 
-###
-POST http://localhost:5000/mint-nft
+### ALEX MUMBAI
+POST https://backend.snapconnect.us/mint-nft
+Content-Type: application/json
+
+{
+    "userId": 646757836,
+    "network": "mumbai",
+    "address": "0x98CB304bd6Eb1640F48108Cb42344904F73f0FeE"
+}
+
+### ALEX CELO
+POST https://backend.snapconnect.us/mint-nft
 Content-Type: application/json
 
 {
     "userId": 646757836,
     "network": "celo",
+    "address": "0x98CB304bd6Eb1640F48108Cb42344904F73f0FeE"
+}
+
+### ALEX AURORA
+POST https://backend.snapconnect.us/mint-nft
+Content-Type: application/json
+
+{
+    "userId": 646757836,
+    "network": "aurora",
     "address": "0x98CB304bd6Eb1640F48108Cb42344904F73f0FeE"
 }
 

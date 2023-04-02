@@ -51,19 +51,25 @@ const providerUrls = {
   celo: `https://celo-alfajores.infura.io/v3/${INFURA_PROJECT_ID}`,
   aurora: `https://aurora-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
 };
+const explorerLinks = {
+  mumbai: "https://mumbai.polygonscan.com/tx/",
+  celo: "https://explorer.celo.org/tx/",
+  aurora: "https://explorer.mainnet.aurora.dev/tx/",
+};
+
 const contracts = {
   mumbai: new ethers.Contract(
-    CONTRACT_ADDRESS,
+    "0x82ed5CC133b6301f67Dfbc946e1c56F202B1f7A2",
     contractAbi,
     new ethers.providers.JsonRpcProvider(providerUrls.mumbai)
   ),
   celo: new ethers.Contract(
-    CONTRACT_ADDRESS,
+    "0x32F506c37Bd1CbD08bc88675f62502bF3E40b234",
     contractAbi,
     new ethers.providers.JsonRpcProvider(providerUrls.celo)
   ),
   aurora: new ethers.Contract(
-    CONTRACT_ADDRESS,
+    "0x81AaDde5592ee4eE79473dF2AB2eb085E9636A1c",
     contractAbi,
     new ethers.providers.JsonRpcProvider(providerUrls.aurora)
   ),
@@ -92,6 +98,8 @@ app.post("/mint-nft", async (req, res) => {
 
   // @ts-ignore
   const wallet = new ethers.Wallet(PRIVATE_KEY, providers[network]);
+  console.log("wallet address", wallet.address);
+
   try {
     // @ts-ignore
     const contract = contracts[network];
@@ -101,7 +109,7 @@ app.post("/mint-nft", async (req, res) => {
       .mint(address, Number(Math.floor(Math.random() * 100000000)));
     const receipt = await tx.wait();
     console.log(receipt);
-    await sendFinalMessage(userId, receipt.transactionHash);
+    await sendFinalMessage(userId, receipt.transactionHash, network);
     res.send({ success: true, receipt });
   } catch (error: any) {
     console.error(error);
@@ -160,8 +168,21 @@ async function generateInviteLink(chatId: number): Promise<string> {
   return result.invite_link;
 }
 
-async function sendFinalMessage(chatId: number, txHash: string) {
+const networkExplorers = {
+  mumbai: "https://mumbai.polygonscan.com/address/",
+  celo: "https://explorer.celo.org/alfajores/tx/",
+  aurora: "https://explorer.testnet.aurora.dev/tx/",
+};
+
+async function sendFinalMessage(
+  chatId: number,
+  txHash: string,
+  network: string
+) {
   const inviteLink = await generateInviteLink(Number(GROUP_CHAT_ID));
+
+  // @ts-ignore
+  const explorerLink = networkExplorers[network] + txHash;
 
   bot.sendMessage(
     chatId,
@@ -175,7 +196,7 @@ Enviamos um link de convite para você no chat. Assim que você ingressar no gru
 
 Novamente, parabéns por completar os passos necessários e estamos ansiosos para vê-lo no grupo! 😃
 
-A transação pode ser verificada aqui: https://explorer.celo.org/alfajores/tx/${txHash}
+A transação pode ser verificada aqui: ${explorerLink}
 `,
     {
       reply_markup: {
