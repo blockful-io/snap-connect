@@ -1,0 +1,21 @@
+import * as hardhat from "hardhat";
+
+async function main() {
+  const SnapConnectCommunity = await hardhat.ethers.getContractFactory(
+    "SnapConnectCommunity"
+  );
+  const snapConnectCommunity = await SnapConnectCommunity.deploy();
+
+  await snapConnectCommunity.deployed();
+
+  // await hardhat.run("verify:verify", {
+  //   address: snapConnectCommunity.address,
+  // });
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
