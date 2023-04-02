@@ -8,7 +8,9 @@
     "dev": "nodemon src/index.ts",
     "start": "pm2 start src/index.ts --interpreter ./node_modules/.bin/ts-node",
     "deploy-local": "npx hardhat deploy --network localhost",
-    "deploy-goerli": "npx hardhat deploy --network goerli"
+    "deploy-mumbai": "npx hardhat deploy --network mumbai",
+    "deploy-celo": "npx hardhat deploy --network celo",
+    "deploy-aurora": "npx hardhat deploy --network aurora"
   },
   "repository": {
     "type": "git",
