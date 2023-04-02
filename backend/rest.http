@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "userId": 1051514609,
-    "network": "mumbai",
+    "network": "celo",
     "address": "0x5C2CF54690d809F8F03b5a96F8A2Adf50A51d7D8"
 }
 
@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
     "userId": 646757836,
-    "network": "mumbai",
+    "network": "celo",
     "address": "0x98CB304bd6Eb1640F48108Cb42344904F73f0FeE"
 }
 
@@ -26,6 +26,16 @@ Content-Type: application/json
 
 {
     "userId": 5777425162,
-    "network": "mumbai",
+    "network": "celo",
+    "address": "0x98CB304bd6Eb1640F48108Cb42344904F73f0FeE"
+}
+
+###
+POST http://localhost:5000/mint-nft
+Content-Type: application/json
+
+{
+    "userId" : 5777425162,
+    "network": "celo",
     "address": "0x98CB304bd6Eb1640F48108Cb42344904F73f0FeE"
 }

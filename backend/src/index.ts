@@ -48,7 +48,7 @@ const contractAbi = [
 ];
 const providerUrls = {
   mumbai: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
-  celo: `https://celo-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
+  celo: `https://celo-alfajores.infura.io/v3/${INFURA_PROJECT_ID}`,
   aurora: `https://aurora-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
 };
 const contracts = {
@@ -101,7 +101,7 @@ app.post("/mint-nft", async (req, res) => {
       .mint(address, Number(Math.floor(Math.random() * 100000000)));
     const receipt = await tx.wait();
     console.log(receipt);
-    await sendFinalMessage(userId);
+    await sendFinalMessage(userId, receipt.transactionHash);
     res.send({ success: true, receipt });
   } catch (error: any) {
     console.error(error);
@@ -160,7 +160,7 @@ async function generateInviteLink(chatId: number): Promise<string> {
   return result.invite_link;
 }
 
-async function sendFinalMessage(chatId: number) {
+async function sendFinalMessage(chatId: number, txHash: string) {
   const inviteLink = await generateInviteLink(Number(GROUP_CHAT_ID));
 
   bot.sendMessage(
@@ -173,7 +173,10 @@ Ficamos muito felizes em tê-lo como parte da nossa comunidade de colecionadores
 
 Enviamos um link de convite para você no chat. Assim que você ingressar no grupo, terá acesso a uma comunidade de pessoas apaixonadas por NFTs e a oportunidade de adquirir mais colecionáveis exclusivos. 🤑💎
 
-Novamente, parabéns por completar os passos necessários e estamos ansiosos para vê-lo no grupo! 😃`,
+Novamente, parabéns por completar os passos necessários e estamos ansiosos para vê-lo no grupo! 😃
+
+A transação pode ser verificada aqui: https://explorer.celo.org/alfajores/tx/${txHash}
+`,
     {
       reply_markup: {
         inline_keyboard: [

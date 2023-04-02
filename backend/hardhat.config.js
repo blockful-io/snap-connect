@@ -28,10 +28,10 @@ module.exports = {
       url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
-    celo: {
-      url: `https://celo-mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+    celoAlfajores: {
       accounts: [`${process.env.PRIVATE_KEY}`],
-    },
+      url: `https://celo-alfajores.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+    },
     aurora: {
       url: `https://aurora-mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts: [`${process.env.PRIVATE_KEY}`],
