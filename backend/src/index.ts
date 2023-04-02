@@ -96,13 +96,13 @@ app.post("/mint-nft", async (req, res) => {
     // @ts-ignore
     const contract = contracts[network];
     console.log("contract address", contract.address);
-    // const tx = await contract
-    //   .connect(wallet)
-    //   .mint(address, Number(Math.floor(Math.random() * 100000000)));
-    // const receipt = await tx.wait();
-    // console.log(receipt);
+    const tx = await contract
+      .connect(wallet)
+      .mint(address, Number(Math.floor(Math.random() * 100000000)));
+    const receipt = await tx.wait();
+    console.log(receipt);
     await sendFinalMessage(userId);
-    // res.send({ success: true, receipt });
+    res.send({ success: true, receipt });
   } catch (error: any) {
     console.error(error);
     res.status(500).send({ error: error.message });
