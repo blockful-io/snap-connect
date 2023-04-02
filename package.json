@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.ts",
-    "start": "pm2 start src/index.ts --interpreter ./node_modules/.bin/ts-node",
+    "start": "node build/index.js",
     "deploy-local": "npx hardhat deploy --network localhost",
     "deploy-mumbai": "npx hardhat deploy --network mumbai",
     "deploy-celo": "npx hardhat deploy --network celo",
