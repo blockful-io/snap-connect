@@ -7,3 +7,6 @@ export * from './PoweredBy';
 export * from './SnapLogo';
 export * from './Toggle';
 export * from './ProgressStep';
+export * from './Select';
+export * from './CardGetToken';
+export * from './AlertPopover'; 

@@ -1,25 +1,24 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
-  getSnap,
-  isFlask,
+  getRequestAccounts,
+  getSnap,  
   sendHello,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
   ConnectButton,
   InstallFlaskButton,
-  ReconnectButton,
   SendHelloButton,
   ShowAlertSnap,
   Card,
-  ProgressStep
+  ProgressStep,
+  CardGetToken
 } from '../components';
-import { FaCheckCircle, FaFileAlt, FaRegCircle } from 'react-icons/fa';
-
+import AlertPopover from '../components/AlertPopover';
 
 const Container = styled.div`
   display: flex;
@@ -114,43 +113,70 @@ const steps = [
 
 let activeStep = 0;
 
+
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);  
+  const [user, setUser] = useState("");
+  const [sendToken, setSendToken] = useState(false);
 
-  console.log('-------------------');
-  console.log('>> isFlask: ', state.isFlask);
-  console.log('>> installedSnap: ', state.installedSnap);
-
+  
 
   if (state.isFlask) {
     if (!state.installedSnap) activeStep = 1;
+    else if (sendToken) activeStep = 4;
     else activeStep = 2;
   } else {
     activeStep = 0;
   }
 
-
-  useEffect(() => {
+  useEffect(() => {    
     const queryParams = new URLSearchParams(window.location.search);
     const user = queryParams.get('user');
+    setUser(user as string);
   }, [])
 
 
   const handleConnectClick = async () => {
     try {
-      console.log('>>> Trying connect Snap...')
+
+      AlertPopover({ message: 'Sucesso!', type: 'success' });
+      console.log('alerttt');
+
       await connectSnap();
       const installedSnap = await getSnap();
-      console.log('>>> Snap Connected Sucess!')
-      dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
+      const user = await getRequestAccounts();
+
+      dispatch({type: MetamaskActions.SetInstalled, payload: installedSnap});
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
     }
   };
+
+  const handleGetTokenClick = async () => {
+    try {
+      
+      fetch('https://backend.snapconnect.us/mint-nft', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: user,
+          network: state.preferredNetwork,
+          address: window.ethereum.selectedAddress,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }).then(() => {
+          setSendToken(true);     
+        });
+    } catch (e) {
+      console.error(e);
+      setSendToken(false);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
+  
 
   const handleSendHelloClick = async () => {
     try {
@@ -168,12 +194,10 @@ const Index = () => {
       <Heading>
         Welcome to <Span>snap-connect</Span>!
       </Heading>
-      <Subtitle>
-
-
-      </Subtitle>
+      <Subtitle></Subtitle>
 
       <ProgressStep steps={steps} activeStep={activeStep} />
+      
       
       <CardContainer>
         {state.error && (
@@ -211,14 +235,12 @@ const Index = () => {
         )}
 
         {shouldDisplayReconnectButton(state.installedSnap) && (
-        <Card
+        <CardGetToken
           content={{
             title: 'Get Token',
-            description:
-              'Get my exclusive NFT as a gift and join the exclusive group on Telegram!',
             button: (
               <ShowAlertSnap
-                onClick={handleSendHelloClick}
+                onClick={handleGetTokenClick}
                 disabled={!state.installedSnap}
               />
             ),
@@ -240,6 +262,10 @@ const Index = () => {
             ),
           }}          
         />)}
+        <div style={{textAlign: 'center', margin: `0 auto`}}>  
+          {/* @ts-ignore       */}
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/ZjOQbMYcNSU" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+        </div>
 
       </CardContainer>
     </Container>

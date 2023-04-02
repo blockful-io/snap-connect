@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
-import { connectSnap, getThemePreference, getSnap } from '../utils';
+import { connectSnap, getThemePreference, getSnap, getRequestAccounts } from '../utils';
 import { HeaderButtons } from './Buttons';
 import { SnapLogo } from './SnapLogo';
 import { Toggle } from './Toggle';
@@ -47,17 +47,12 @@ export const Header = ({
 
   const handleConnectClick = async () => {
     try {
-      console.log('>>> Trying connect Snap...')
+
       await connectSnap();
       const installedSnap = await getSnap();
-      console.log('>>> Snap Connected Sucess: ', installedSnap);
-      console.log('>>> Public Address: ', window.ethereum.selectedAddress);
+      const user = await getRequestAccounts();
+      dispatch({type: MetamaskActions.SetInstalled, payload: installedSnap});
 
-
-      dispatch({
-        type: MetamaskActions.SetInstalled,
-        payload: installedSnap,
-      });
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });

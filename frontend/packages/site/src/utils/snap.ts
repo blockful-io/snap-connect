@@ -72,29 +72,9 @@ export const sendHello = async () => {
 
 };
 
-
-async function getPublicKey () {  
+export const getRequestAccounts = async () => {  
   const accounts = await window.ethereum.enable();
-  console.log('accounts: ', accounts);
-
-  const encryptionPublicKey = await window.ethereum.request({
-    method: 'eth_getEncryptionPublicKey',
-    params: [accounts[0]]
-  })
-
-  return encryptionPublicKey
+  return accounts
 }
-
-async function descrypt (obj : any) {  
-  const value = await window.ethereum.request({
-    method: 'eth_decrypt',
-    params: [obj]
-  })
-
-  return value;
-}
-
-
-
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

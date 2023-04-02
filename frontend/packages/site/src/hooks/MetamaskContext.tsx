@@ -12,11 +12,13 @@ import { isFlask, getSnap } from '../utils';
 export type MetamaskState = {
   isFlask: boolean;
   installedSnap?: Snap;
+  preferredNetwork: string;
   error?: Error;
 };
 
 const initialState: MetamaskState = {
   isFlask: false,
+  preferredNetwork: "mumbai",
   error: undefined,
 };
 
@@ -34,6 +36,7 @@ export const MetaMaskContext = createContext<
 export enum MetamaskActions {
   SetInstalled = 'SetInstalled',
   SetFlaskDetected = 'SetFlaskDetected',
+  SetPreferredNetwork = 'SetPreferredNetwork',
   SetError = 'SetError',
 }
 
@@ -55,6 +58,12 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+
+    case MetamaskActions.SetPreferredNetwork:
+      return {
+        ...state,
+        preferredNetwork: action.payload,
       };
 
     default:
@@ -79,11 +88,7 @@ export const MetaMaskProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     async function detectFlask() {
       const isFlaskDetected = await isFlask();
-
-      dispatch({
-        type: MetamaskActions.SetFlaskDetected,
-        payload: isFlaskDetected,
-      });
+      dispatch({type: MetamaskActions.SetFlaskDetected, payload: isFlaskDetected});
     }
 
     async function detectSnapInstalled() {
