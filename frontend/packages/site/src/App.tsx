@@ -4,6 +4,7 @@ import { Footer, Header } from './components';
 
 import { GlobalStyle } from './config/theme';
 import { ToggleThemeContext } from './Root';
+import { Toaster } from 'react-hot-toast';
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,6 +24,7 @@ export const App: FunctionComponent<AppProps> = ({ children }) => {
   return (
     <>
       <GlobalStyle />
+      <Toaster></Toaster>
       <Wrapper>
         <Header handleToggleClick={toggleTheme} />
         {children}

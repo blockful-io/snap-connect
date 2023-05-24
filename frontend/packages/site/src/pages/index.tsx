@@ -18,7 +18,8 @@ import {
   ProgressStep,
   CardGetToken
 } from '../components';
-import AlertPopover from '../components/AlertPopover';
+import toast from 'react-hot-toast';
+
 
 const Container = styled.div`
   display: flex;
@@ -138,18 +139,16 @@ const Index = () => {
 
   const handleConnectClick = async () => {
     try {
-
-      AlertPopover({ message: 'Sucesso!', type: 'success' });
-      console.log('alerttt');
-
       await connectSnap();
       const installedSnap = await getSnap();
       const user = await getRequestAccounts();
 
       dispatch({type: MetamaskActions.SetInstalled, payload: installedSnap});
+      toast.success("Wallet connected successfully!")
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
+      toast.error("Error connecting to wallet!")
     }
   };
 
@@ -167,12 +166,14 @@ const Index = () => {
           'Content-type': 'application/json; charset=UTF-8',
         },
       }).then(() => {
-          setSendToken(true);     
+          setSendToken(true); 
+          toast.success("Token Received Successfully!");
         });
     } catch (e) {
       console.error(e);
       setSendToken(false);
       dispatch({ type: MetamaskActions.SetError, payload: e });
+      toast.error("Error receiving token!!");
     }
   };
 
