@@ -48,8 +48,8 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
+    "react-hot-toast": "^2.4.0",
     "react-icons": "^4.8.0",
-    "serve": "^14.2.0",
-    "react-hot-toast": "^2.4.0"
+    "serve": "^14.2.0"
   }
 }

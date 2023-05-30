@@ -120,8 +120,6 @@ const Index = () => {
   const [user, setUser] = useState("");
   const [sendToken, setSendToken] = useState(false);
 
-  
-
   if (state.isFlask) {
     if (!state.installedSnap) activeStep = 1;
     else if (sendToken) activeStep = 4;
@@ -140,8 +138,7 @@ const Index = () => {
   const handleConnectClick = async () => {
     try {
       await connectSnap();
-      const installedSnap = await getSnap();
-      const user = await getRequestAccounts();
+      const installedSnap = await getSnap();      
 
       dispatch({type: MetamaskActions.SetInstalled, payload: installedSnap});
       toast.success("Wallet connected successfully!")
@@ -154,7 +151,8 @@ const Index = () => {
 
   const handleGetTokenClick = async () => {
     try {
-      
+
+      const user = await getRequestAccounts();      
       fetch('https://backend.snapconnect.us/mint-nft', {
         method: 'POST',
         body: JSON.stringify({
@@ -181,7 +179,8 @@ const Index = () => {
 
   const handleSendHelloClick = async () => {
     try {
-      await sendHello();
+      navigator.clipboard.writeText("https://t.me/SnapConnectBot");
+      toast.success("Copied to clipboard...")
     } catch (e) {
       console.error(e);
       dispatch({ type: MetamaskActions.SetError, payload: e });
