@@ -1,35 +1,27 @@
+import { cleanEnv, str, num } from "envalid";
 import express from "express";
-import dotenv from "dotenv";
 import TelegramBot from "node-telegram-bot-api";
 import { ethers } from "ethers";
 import cors from "cors";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 0;
-if (PORT === 0) {
-  throw new Error("PORT is not defined");
-}
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "";
-if (!TELEGRAM_BOT_TOKEN) {
-  throw new Error("TELEGRAM_BOT_TOKEN is not defined");
-}
-const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || "";
-if (!INFURA_PROJECT_ID) {
-  throw new Error("INFURA_PROJECT_ID is not defined");
-}
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
-if (!PRIVATE_KEY) {
-  throw new Error("PRIVATE_KEY is not defined");
-}
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS || "";
-if (!CONTRACT_ADDRESS) {
-  throw new Error("CONTRACT_ADDRESS is not defined");
-}
-const GROUP_CHAT_ID = process.env.GROUP_CHAT_ID || "";
-if (!GROUP_CHAT_ID) {
-  throw new Error("GROUP_CHAT_ID is not defined");
-}
+const env = cleanEnv(process.env, {
+  PORT: num(),
+  TELEGRAM_BOT_TOKEN: str(),
+  INFURA_PROJECT_ID: str(),
+  PRIVATE_KEY: str(),
+  CONTRACT_ADDRESS: str(),
+  GROUP_CHAT_ID: num(),
+});
+
+const PORT = env.PORT;
+const TELEGRAM_BOT_TOKEN = env.TELEGRAM_BOT_TOKEN;
+const INFURA_PROJECT_ID = env.INFURA_PROJECT_ID;
+const PRIVATE_KEY = env.PRIVATE_KEY;
+const CONTRACT_ADDRESS = env.CONTRACT_ADDRESS;
+const GROUP_CHAT_ID = env.GROUP_CHAT_ID;
 
 const app = express();
 
