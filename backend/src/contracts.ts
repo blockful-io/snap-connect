@@ -13,49 +13,25 @@ const env = cleanEnv(process.env, {
 const INFURA_PROJECT_ID = env.INFURA_PROJECT_ID;
 const PRIVATE_KEY = env.PRIVATE_KEY;
 
-const possibleNetworks = ["mumbai", "celo", "aurora"] as const;
+const provider = new ethers.providers.JsonRpcProvider(
+  `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`
+);
 
-const contractAbi = [
-  "function mint(address to, uint256 tokenId) public returns (uint256)",
-];
-const providerUrls = {
-  mumbai: `https://polygon-mumbai.infura.io/v3/${INFURA_PROJECT_ID}`,
-  celo: `https://celo-alfajores.infura.io/v3/${INFURA_PROJECT_ID}`,
-  aurora: `https://aurora-mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-};
-
-const contracts = {
-  mumbai: new ethers.Contract(
-    "0x82ed5CC133b6301f67Dfbc946e1c56F202B1f7A2",
-    contractAbi,
-    new ethers.providers.JsonRpcProvider(providerUrls.mumbai)
-  ),
-  celo: new ethers.Contract(
-    "0x32F506c37Bd1CbD08bc88675f62502bF3E40b234",
-    contractAbi,
-    new ethers.providers.JsonRpcProvider(providerUrls.celo)
-  ),
-  aurora: new ethers.Contract(
-    "0x81AaDde5592ee4eE79473dF2AB2eb085E9636A1c",
-    contractAbi,
-    new ethers.providers.JsonRpcProvider(providerUrls.aurora)
-  ),
-};
-const providers = {
-  mumbai: new ethers.providers.JsonRpcProvider(providerUrls.mumbai),
-  celo: new ethers.providers.JsonRpcProvider(providerUrls.celo),
-  aurora: new ethers.providers.JsonRpcProvider(providerUrls.aurora),
-};
+const contract = new ethers.Contract(
+  "0x931332ca07C59CEA8eE4540a0fBD3d7676a57D0d",
+  [
+    "function tokenURI(uint256) public pure returns (string memory)",
+    "function safeMint(address to) public",
+    "function totalSupply() public view returns (uint256)",
+  ],
+  provider
+);
+const deployerWallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
 export async function mintNft(req: express.Request, res: express.Response) {
-  const { userId, network, address } = req.body;
+  const { userId, address } = req.body;
   if (!userId) {
     return res.status(400).send({ error: "userId is required" });
-  }
-  if (network && !possibleNetworks.includes(network)) {
-    return res
-      .status(400)
-      .send({ error: `network must be one of ${possibleNetworks.join(", ")}` });
   }
   if (!address || !ethers.utils.isAddress(address)) {
     return res
@@ -63,23 +39,16 @@ export async function mintNft(req: express.Request, res: express.Response) {
       .send({ error: "address is required and must be valid" });
   }
 
-  // @ts-ignore
-  const wallet = new ethers.Wallet(PRIVATE_KEY, providers[network]);
-  console.log("wallet address", wallet.address);
-
   try {
-    // @ts-ignore
-    const contract = contracts[network];
     console.log("contract address", contract.address);
-    const tx = await contract
-      .connect(wallet)
-      .mint(address, Number(Math.floor(Math.random() * 100000000)));
+    const tx = await contract.connect(deployerWallet).safeMint(address);
     const receipt = await tx.wait();
-    console.log(receipt);
-    await sendFinalMessage(userId, receipt.transactionHash, network);
+    console.log("transactionHash", receipt.transactionHash);
+    await sendFinalMessage(userId, receipt.transactionHash);
+    console.log("sent final message");
     res.send({ success: true, receipt });
   } catch (error: any) {
-    console.error(error);
+    console.log("error", error);
     res.status(500).send({ error: error.message });
   }
 }

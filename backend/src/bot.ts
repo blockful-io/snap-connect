@@ -58,21 +58,10 @@ async function generateInviteLink(chatId: number): Promise<string> {
   return result.invite_link;
 }
 
-const networkExplorers = {
-  mumbai: "https://mumbai.polygonscan.com/address/",
-  celo: "https://explorer.celo.org/alfajores/tx/",
-  aurora: "https://explorer.testnet.aurora.dev/tx/",
-};
-
-export async function sendFinalMessage(
-  chatId: number,
-  txHash: string,
-  network: string
-) {
+export async function sendFinalMessage(chatId: number, txHash: string) {
   const inviteLink = await generateInviteLink(Number(GROUP_CHAT_ID));
 
-  // @ts-ignore
-  const explorerLink = networkExplorers[network] + txHash;
+  const explorerLink = "https://mumbai.polygonscan.com/tx/" + txHash;
 
   bot.sendMessage(
     chatId,
